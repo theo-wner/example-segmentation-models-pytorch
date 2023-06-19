@@ -30,3 +30,16 @@ def get_training_augmentation():
         albu.OneOf([albu.RandomBrightnessContrast(p=1), albu.HueSaturationValue(p=1)],p=0.9)
     ]
     return albu.Compose(train_transform)
+
+# Für einige Encoder müssen die Bilder vorverarbeitet werden, hierfür wird eine zum Encoder passende
+# preprocesing function benötigt.
+def get_preprocessing(preprocessing_fn):
+    _transform = [
+        albu.Lambda(image=preprocessing_fn),
+        albu.Lambda(image=to_tensor, mask=to_tensor),
+    ]
+    return albu.Compose(_transform)
+
+# Ehrlichgesagt keine Ahnung was hier passiert
+def to_tensor(x, **kwargs):
+    return x.transpose(2, 0, 1).astype('float32')

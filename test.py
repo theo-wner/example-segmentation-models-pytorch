@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import segmentation_models_pytorch as smp
 from dataset import Dataset
 from functions import *
+import torch
 
 ################################################################################
 # Daten laden
@@ -53,7 +54,6 @@ augmented_dataset = Dataset(x_train_dir, y_train_dir,
 for i in range(3):
     image, mask = augmented_dataset[1]
     visualize(filename=str(i), image=image, mask=mask.squeeze())
-
 
 ################################################################################
 # Modell erstellen
