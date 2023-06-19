@@ -52,7 +52,7 @@ augmented_dataset = Dataset(x_train_dir, y_train_dir,
 # --> 3 Unterschiedliche Bilder dank zufälligen Trafos
 for i in range(3):
     image, mask = augmented_dataset[1]
-    visualize(filename=i, image=image, mask=mask.squeeze())
+    visualize(filename=str(i), image=image, mask=mask.squeeze())
 
 
 ################################################################################

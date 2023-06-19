@@ -33,7 +33,7 @@ class Dataset(BaseDataset):
         # i-tes Bild einlesen
         image = cv2.imread(self.images_fps[i])
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # Als RGB Bild einlesen
-        mask = cv2.imread(self.masks_fps[i], cv2.IMREAD_GRAYSCALE) # Als Farbbild einlesen
+        mask = cv2.imread(self.masks_fps[i], cv2.IMREAD_GRAYSCALE) # Als Graustufenbild einlesen
         
         # Erstelle für jede Klasse ein Bild mit
         #   1 - wenn der Pixel der Klasse angehört
