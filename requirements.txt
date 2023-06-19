@@ -1,5 +1,0 @@
-lightning
-wandb
-git+https://github.com/qubvel/segmentation_models.pytorch
-opencv-python
-albumentations
