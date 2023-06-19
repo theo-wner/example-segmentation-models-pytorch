@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 import segmentation_models_pytorch as smp
+from dataset import Dataset
 
 ################################################################################
 # Daten laden
@@ -29,7 +30,7 @@ y_test_dir = os.path.join(DATA_DIR, 'testannot')
 
 # Hilfsfunktion, die mehrere Bilder in einem Subplot darstellt
 # visualize(image_1=img1, image2=img2) kann dann über key und value iterieren
-def visualize(**images):
+def visualize(filename='test', **images):
     """PLot images in one row."""
     n = len(images)
     plt.figure(figsize=(16, 5))
@@ -39,10 +40,15 @@ def visualize(**images):
         plt.yticks([])
         plt.title(' '.join(name.split('_')).title())
         plt.imshow(image)
-    plt.show()
+    plt.savefig(filename)
 #-------------------------------------------------------------------------------
 # Dataloader
 #-------------------------------------------------------------------------------
+dataset = Dataset(x_train_dir, y_train_dir, classes=['car'])
+
+image, mask = dataset[4]
+
+visualize(image=image, cars_mask=mask.squeeze())
 
 #-------------------------------------------------------------------------------
 # Augmentations
