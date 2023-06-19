@@ -31,6 +31,14 @@ def get_training_augmentation():
     ]
     return albu.Compose(train_transform)
 
+# Funktion, die dasselbe für den Validierungdatensatz macht, aber hier sind die Trafos nicht 
+# so wichtig. Es sollen nur alle Validierungsbilder auf dieselbe, durch 32 teilbare Größe gebracht werden
+def get_validation_augmentation():
+    test_transform = [
+        albu.PadIfNeeded(384, 480)
+    ]
+    return albu.Compose(test_transform)
+
 # Für einige Encoder müssen die Bilder vorverarbeitet werden, hierfür wird eine zum Encoder passende
 # preprocesing function benötigt.
 def get_preprocessing(preprocessing_fn):

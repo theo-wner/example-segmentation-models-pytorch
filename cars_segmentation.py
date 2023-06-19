@@ -6,6 +6,8 @@ import segmentation_models_pytorch as smp
 from dataset import Dataset
 from functions import *
 import torch
+import ssl
+from torch.utils.data import DataLoader
 
 ################################################################################
 # Daten laden
@@ -36,29 +38,43 @@ CLASSES = ['car']
 ACTIVATION = 'sigmoid'
 DEVICE = 'cuda'
 
-# model = smp.FPN(
-#     encoder_name=ENCODER, 
-#     encoder_weights=ENCODER_WEIGHTS, 
-#     classes=len(CLASSES), 
-#     activation=ACTIVATION,
-# )
+# Diese Zeile musste hinzugefügt werden, weil sonst ein ssl-Fehler auftritt
+ssl._create_default_https_context = ssl._create_unverified_context
 
-# preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
+model = smp.FPN(
+    encoder_name=ENCODER, 
+    encoder_weights=ENCODER_WEIGHTS, 
+    classes=len(CLASSES), 
+    activation=ACTIVATION,
+)
+
+preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
 
 ################################################################################
 # Datensatz und DataLoader erstellen
 ################################################################################
+train_dataset = Dataset(
+    x_train_dir, 
+    y_train_dir, 
+    augmentation=get_training_augmentation(), 
+    preprocessing=get_preprocessing(preprocessing_fn),
+    classes=CLASSES,
+)
+
+valid_dataset = Dataset(
+    x_valid_dir, 
+    y_valid_dir, 
+    augmentation=get_validation_augmentation(), 
+    preprocessing=get_preprocessing(preprocessing_fn),
+    classes=CLASSES,
+)
+
+train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True, num_workers=12)
+valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=4)
 
 ################################################################################
 # Trainieren
 ################################################################################
-# train_dataset = Dataset(
-#     x_train_dir, 
-#     y_train_dir, 
-#     augmentation=get_training_augmentation(), 
-#     preprocessing=get_preprocessing(preprocessing_fn),
-#     classes=CLASSES,
-# )
 
 ################################################################################
 # Testen
