@@ -4,6 +4,7 @@ import cv2
 import matplotlib.pyplot as plt
 import segmentation_models_pytorch as smp
 from dataset import Dataset
+from functions import *
 
 ################################################################################
 # Daten laden
@@ -28,31 +29,30 @@ y_valid_dir = os.path.join(DATA_DIR, 'valannot')
 x_test_dir = os.path.join(DATA_DIR, 'test')
 y_test_dir = os.path.join(DATA_DIR, 'testannot')
 
-# Hilfsfunktion, die mehrere Bilder in einem Subplot darstellt
-# visualize(image_1=img1, image2=img2) kann dann über key und value iterieren
-def visualize(filename='test', **images):
-    """PLot images in one row."""
-    n = len(images)
-    plt.figure(figsize=(16, 5))
-    for i, (name, image) in enumerate(images.items()):
-        plt.subplot(1, n, i + 1)
-        plt.xticks([])
-        plt.yticks([])
-        plt.title(' '.join(name.split('_')).title())
-        plt.imshow(image)
-    plt.savefig(filename)
 #-------------------------------------------------------------------------------
 # Dataloader
 #-------------------------------------------------------------------------------
 dataset = Dataset(x_train_dir, y_train_dir, classes=['car'])
 
+# Testweise visualisieren
 image, mask = dataset[4]
-
 visualize(image=image, cars_mask=mask.squeeze())
 
 #-------------------------------------------------------------------------------
 # Augmentations
 #-------------------------------------------------------------------------------
+# Vor dem Abgreifen eines Bildes über den []-Operator soll dieses durch eine 
+# Pipeline an zufälligen Trafos geschickt werden
+
+augmented_dataset = Dataset(x_train_dir, y_train_dir, 
+                            augmentation=get_training_augmentation(), 
+                            classes=['car'])
+
+# Testweise dasselbe Bild 3 Mal visualisieren 
+# --> 3 Unterschiedliche Bilder dank zufälligen Trafos
+for i in range(3):
+    image, mask = augmented_dataset[1]
+    visualize(filename=i, image=image, mask=mask.squeeze())
 
 
 ################################################################################
