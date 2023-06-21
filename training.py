@@ -77,14 +77,10 @@ valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_worker
 ################################################################################
 # Loss-Funktion und Metrik festlefen
 loss = smp.utils.losses.DiceLoss()
-metrics = [
-    smp.utils.metrics.IoU(threshold=0.5),
-]
+metrics = [smp.utils.metrics.IoU(threshold=0.5)]
 
 # Optimizer Festlegen
-optimizer = torch.optim.Adam([ 
-    dict(params=model.parameters(), lr=0.0001),
-])
+optimizer = torch.optim.Adam([dict(params=model.parameters(), lr=0.0001)])
 
 # TrainEpoch-Objekt erstellen, vereinfacht das Trainieren
 train_epoch = smp.utils.train.TrainEpoch(model, loss=loss, metrics=metrics, optimizer=optimizer,device=DEVICE,verbose=True)
