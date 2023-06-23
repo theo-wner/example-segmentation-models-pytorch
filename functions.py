@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import albumentations as albu
 import os
+import stat
 
 # Hilfsfunktion, die mehrere Bilder in einem Subplot darstellt
 # visualize(image_1=img1, image2=img2) kann dann über key und value iterieren
@@ -20,6 +21,7 @@ def visualize(filename='test', **images):
     if not os.path.exists(directory):
         os.makedirs(directory)
     plt.savefig(os.path.join(directory, filename))
+    os.chmod(os.path.join(directory, filename), stat.S_IROTH)
 
 # Funktion, die eine Pipeline für die training augmentation bereitstellt
 # (Mehrere zufällige Transformationen)
