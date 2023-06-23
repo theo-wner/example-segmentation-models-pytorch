@@ -61,12 +61,7 @@ test_dataloader = DataLoader(test_dataset)
 ################################################################################
 # ValidEpoch-Objekt erstellen um Metrikaussage über den Testdatensatz zu treffen
 ################################################################################
-test_epoch = smp.utils.train.ValidEpoch(
-    model=best_model,
-    loss=loss,
-    metrics=metrics,
-    device=DEVICE,
-)
+test_epoch = smp.utils.train.ValidEpoch(model=best_model, loss=loss, metrics=metrics, device=DEVICE)
 
 logs = test_epoch.run(test_dataloader)
 
