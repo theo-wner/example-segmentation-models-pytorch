@@ -36,7 +36,7 @@ ENCODER = 'se_resnext50_32x4d'
 ENCODER_WEIGHTS = 'imagenet'
 CLASSES = ['car']
 ACTIVATION = 'sigmoid'
-DEVICE = 'cuda:3'
+DEVICE = 'cuda:1'
 
 # Diese Zeile musste hinzugefügt werden, weil sonst ein ssl-Fehler auftritt
 ssl._create_default_https_context = ssl._create_unverified_context

@@ -4,7 +4,7 @@ import os
 
 # Hilfsfunktion, die mehrere Bilder in einem Subplot darstellt
 # visualize(image_1=img1, image2=img2) kann dann über key und value iterieren
-def visualize(img_path='test', **images):
+def visualize(filename='test', **images):
     """PLot images in one row."""
     n = len(images)
     plt.figure(figsize=(16, 5))
@@ -13,11 +13,13 @@ def visualize(img_path='test', **images):
         plt.xticks([])
         plt.yticks([])
         plt.title(' '.join(name.split('_')).title())
+        plt.imshow(image)
 
-    if not os.path.exists(img_path):
-        print('Create Directory')
-    #    os.makedirs(img_path)
-    plt.savefig(img_path)
+    # Bild in Unterverzeichnis ABbildungen speichern
+    directory = './Abbildungen/'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    plt.savefig(os.path.join(directory, filename))
 
 # Funktion, die eine Pipeline für die training augmentation bereitstellt
 # (Mehrere zufällige Transformationen)

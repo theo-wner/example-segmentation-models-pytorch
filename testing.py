@@ -33,7 +33,7 @@ ENCODER = 'se_resnext50_32x4d'
 ENCODER_WEIGHTS = 'imagenet'
 CLASSES = ['car']
 ACTIVATION = 'sigmoid'
-DEVICE = 'cuda:3'
+DEVICE = 'cuda:1'
 
 preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
 
@@ -82,4 +82,4 @@ for i in range(5):
     pr_mask = best_model.predict(x_tensor)
     pr_mask = (pr_mask.squeeze().cpu().numpy().round())
         
-    visualize(filename='pred ' + str(i), image=image_vis, ground_truth_mask=gt_mask, predicted_mask=pr_mask)
+    visualize(filename='pred_' + str(i), image=image_vis, ground_truth_mask=gt_mask, predicted_mask=pr_mask)
