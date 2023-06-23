@@ -1,9 +1,10 @@
 import matplotlib.pyplot as plt
 import albumentations as albu
+import os
 
 # Hilfsfunktion, die mehrere Bilder in einem Subplot darstellt
 # visualize(image_1=img1, image2=img2) kann dann über key und value iterieren
-def visualize(filename='test', **images):
+def visualize(img_path='test', **images):
     """PLot images in one row."""
     n = len(images)
     plt.figure(figsize=(16, 5))
@@ -12,8 +13,11 @@ def visualize(filename='test', **images):
         plt.xticks([])
         plt.yticks([])
         plt.title(' '.join(name.split('_')).title())
-        plt.imshow(image)
-    plt.savefig(filename)
+
+    if not os.path.exists(img_path):
+        print('Create Directory')
+    #    os.makedirs(img_path)
+    plt.savefig(img_path)
 
 # Funktion, die eine Pipeline für die training augmentation bereitstellt
 # (Mehrere zufällige Transformationen)
