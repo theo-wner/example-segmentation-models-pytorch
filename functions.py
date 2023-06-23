@@ -1,5 +1,3 @@
-# Haaaaallooooo
-
 import matplotlib.pyplot as plt
 import albumentations as albu
 
