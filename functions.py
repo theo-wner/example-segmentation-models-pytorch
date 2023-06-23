@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 import albumentations as albu
 import os
 import stat
+import numpy as np
+import matplotlib.patches as mpatches
+import matplotlib.colors as mcolors
 
 # Hilfsfunktion, die mehrere Bilder in einem Subplot darstellt
 # visualize(image_1=img1, image2=img2) kann dann über key und value iterieren
@@ -15,13 +18,56 @@ def visualize(filename='test', **images):
         plt.yticks([])
         plt.title(' '.join(name.split('_')).title())
         plt.imshow(image)
+        plt.legend()
 
-    # Bild in Unterverzeichnis ABbildungen speichern
+    # Bild in Unterverzeichnis Abbildungen speichern
     directory = './Abbildungen/'
     if not os.path.exists(directory):
         os.makedirs(directory)
     plt.savefig(os.path.join(directory, filename))
-    os.chmod(os.path.join(directory, filename), stat.S_IROTH)
+
+# Hilfsfunktion, die ein Paar aus Bild und Maske darstellt
+def visualize_img_mask(image, mask, filename='test'):
+    # Bild
+    plt.figure(figsize=(16, 5))
+    plt.subplot(1, 2, 1)
+    plt.xticks([])
+    plt.yticks([])
+    plt.title('Bild')
+    plt.imshow(image)
+
+    # Maske
+    plt.subplot(1, 2, 2)
+    plt.xticks([])
+    plt.yticks([])
+    plt.title('Maske')
+    # Labels und dazugehörige Farben als dictionary definieren
+    labels_and_colors = {'sky' : 'lightblue', 
+            'building' : 'lightyellow',
+            'pole' : 'orange', 
+            'road' : 'gray',
+            'pavement' : 'lightgray',
+            'tree' : 'green',
+            'signsymbol' : 'black',
+            'fence' : 'brown',
+            'car' : 'blue',
+            'pedestrian' : 'red', 
+            'bicyclist' : 'purple',
+            'unlabelled' : 'white'}
+    # Eigene Colomap erstellen
+    cmap = mcolors.ListedColormap(list(labels_and_colors.values()))
+
+    plt.imshow(mask, cmap=cmap)
+
+    # Legende erstellen
+    legend_patches = [mpatches.Patch(color=color, label=label) for label, color in labels_and_colors.items()]
+    plt.legend(handles=legend_patches, title='Classes', loc='upper left', bbox_to_anchor=(1.02, 1))
+   
+    # Bild in Unterverzeichnis Abbildungen speichern
+    directory = './Abbildungen/'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    plt.savefig(os.path.join(directory, filename))
 
 # Funktion, die eine Pipeline für die training augmentation bereitstellt
 # (Mehrere zufällige Transformationen)

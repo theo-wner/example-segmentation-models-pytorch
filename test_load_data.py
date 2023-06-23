@@ -33,11 +33,15 @@ y_test_dir = os.path.join(DATA_DIR, 'testannot')
 #-------------------------------------------------------------------------------
 # Dataloader
 #-------------------------------------------------------------------------------
-dataset = Dataset(x_train_dir, y_train_dir, classes=['car'])
+CLASSES = ['sky', 'building', 'pole', 'road', 'pavement', 
+               'tree', 'signsymbol', 'fence', 'car', 
+               'pedestrian', 'bicyclist', 'unlabelled']
+
+dataset = Dataset(x_train_dir, y_train_dir, classes=CLASSES)
 
 # Testweise visualisieren
-image, mask = dataset[4]
-visualize(image=image, cars_mask=mask.squeeze())
+image, mask = dataset[150]
+visualize_img_mask(image, mask, filename='test.png')
 
 #-------------------------------------------------------------------------------
 # Augmentations
@@ -52,8 +56,8 @@ augmented_dataset = Dataset(x_train_dir, y_train_dir,
 # Testweise dasselbe Bild 3 Mal visualisieren 
 # --> 3 Unterschiedliche Bilder dank zufälligen Trafos
 for i in range(3):
-    image, mask = augmented_dataset[1]
-    visualize(filename=str(i), image=image, mask=mask.squeeze())
+    image, mask = augmented_dataset[150]
+    visualize_img_mask(image, mask, filename='test_aug_' + str(i) + '.png')
 
 ################################################################################
 # Modell erstellen
