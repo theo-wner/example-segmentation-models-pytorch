@@ -12,6 +12,11 @@ from torch.utils.data import DataLoader
 import segmentation_models_pytorch.utils as smp_utils
 
 ################################################################################
+# GPU-Abfrage
+################################################################################
+gpu_id = input('GPU ID: ')
+
+################################################################################
 # Daten laden
 ################################################################################
 DATA_DIR = './data/CamVid/'
@@ -40,7 +45,7 @@ CLASSES = ['sky', 'building', 'pole', 'road', 'pavement',
                'tree', 'signsymbol', 'fence', 'car', 
                'pedestrian', 'bicyclist', 'unlabelled']
 ACTIVATION = 'sigmoid'
-DEVICE = 'cuda:0'
+DEVICE = 'cuda:' + gpu_id
 
 # Diese Zeile musste hinzugefügt werden, weil sonst ein ssl-Fehler auftritt
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -80,7 +85,7 @@ valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_worker
 # Trainieren
 ################################################################################
 # Loss-Funktion und Metrik festlegen
-loss = smp_utils.losses.DiceLoss(smp.losses.MULTILABEL_MODE)
+loss = smp_utils.losses.CrossEntropyLoss()
 metrics = [smp_utils.metrics.IoU(threshold=0.5)]
 
 # Optimizer Festlegen
@@ -94,8 +99,7 @@ valid_epoch = smp_utils.train.ValidEpoch(model, loss=loss, metrics=metrics, devi
 
 # Für 40 Epochen trainieren
 max_score = 0
-
-for i in range(0, 40):
+for i in range(0, 5):
     print('\nEpoch: {}'.format(i))
     train_logs = train_epoch.run(train_loader)
     valid_logs = valid_epoch.run(valid_loader)

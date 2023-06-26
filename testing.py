@@ -5,6 +5,13 @@ from functions import *
 from torch.utils.data import DataLoader
 import segmentation_models_pytorch as smp
 import numpy as np
+# Utils muss nochmal separat importiert werden, weil es sonst nicht erkannt wird
+import segmentation_models_pytorch.utils as smp_utils
+
+################################################################################
+# GPU-Abfrage
+################################################################################
+gpu_id = input('GPU ID: ')
 
 ################################################################################
 # Daten laden
@@ -35,17 +42,17 @@ CLASSES = ['sky', 'building', 'pole', 'road', 'pavement',
                'tree', 'signsymbol', 'fence', 'car', 
                'pedestrian', 'bicyclist', 'unlabelled']
 ACTIVATION = 'sigmoid'
-DEVICE = 'cuda:1'
+DEVICE = 'cuda:' + gpu_id
 
 preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
 
-loss = smp.utils.losses.DiceLoss('multilabel')
-metrics = [smp.utils.metrics.IoU(threshold=0.5)]
+loss = smp_utils.losses.CrossEntropyLoss()
+metrics = [smp_utils.metrics.IoU(threshold=0.5)]
 
 ################################################################################
 # Bestes trainiertes Modell laden
 ################################################################################
-best_model = torch.load('./best_model.pth')
+best_model = torch.load('./best_model_multiclass.pth')
 
 ################################################################################
 # Test-Datensatz
@@ -63,7 +70,7 @@ test_dataloader = DataLoader(test_dataset)
 ################################################################################
 # ValidEpoch-Objekt erstellen um Metrikaussage über den Testdatensatz zu treffen
 ################################################################################
-test_epoch = smp.utils.train.ValidEpoch(model=best_model, loss=loss, metrics=metrics, device=DEVICE)
+test_epoch = smp_utils.train.ValidEpoch(model=best_model, loss=loss, metrics=metrics, device=DEVICE)
 
 logs = test_epoch.run(test_dataloader)
 
