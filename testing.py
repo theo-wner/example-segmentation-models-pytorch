@@ -31,7 +31,9 @@ y_test_dir = os.path.join(DATA_DIR, 'testannot')
 ################################################################################
 ENCODER = 'se_resnext50_32x4d'
 ENCODER_WEIGHTS = 'imagenet'
-CLASSES = ['car']
+CLASSES = ['sky', 'building', 'pole', 'road', 'pavement', 
+               'tree', 'signsymbol', 'fence', 'car', 
+               'pedestrian', 'bicyclist', 'unlabelled']
 ACTIVATION = 'sigmoid'
 DEVICE = 'cuda:1'
 

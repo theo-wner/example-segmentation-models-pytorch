@@ -5,6 +5,7 @@ import stat
 import numpy as np
 import matplotlib.patches as mpatches
 import matplotlib.colors as mcolors
+import cv2
 
 # Hilfsfunktion, die mehrere Bilder in einem Subplot darstellt
 # visualize(image_1=img1, image2=img2) kann dann über key und value iterieren
@@ -74,8 +75,9 @@ def visualize_img_mask(image, mask, filename='test'):
 def get_training_augmentation():
     train_transform = [
         albu.HorizontalFlip(p=0.5),
-        albu.ShiftScaleRotate(scale_limit=0.5, rotate_limit=0, shift_limit=0.1, p=1, border_mode=0),
-        albu.PadIfNeeded(min_height=320, min_width=320, always_apply=True, border_mode=0),
+        # Wert der Bereiche ohne Information mit border_mode konstant und mit mask_value auf einen bestimmten Wert setzen
+        albu.ShiftScaleRotate(scale_limit=0.5, rotate_limit=0, shift_limit=0.1, p=1, border_mode=cv2.BORDER_CONSTANT, mask_value=11),
+        albu.PadIfNeeded(min_height=320, min_width=320, always_apply=True, border_mode=cv2.BORDER_CONSTANT, mask_value=11),
         albu.RandomCrop(height=320, width=320, always_apply=True),
         albu.GaussNoise(p=0.2),
         albu.Perspective(p=0.5),
@@ -98,10 +100,15 @@ def get_validation_augmentation():
 def get_preprocessing(preprocessing_fn):
     _transform = [
         albu.Lambda(image=preprocessing_fn),
-        albu.Lambda(image=to_tensor, mask=to_tensor),
+        albu.Lambda(image=img_to_tensor, mask=mask_to_tensor),
     ]
     return albu.Compose(_transform)
 
-# Ehrlichgesagt keine Ahnung was hier passiert
-def to_tensor(x, **kwargs):
+# Bild in eine Form bringen, die vom Netz verarbeitet werden kann
+# Transpose ändert die Reihenfolge der Kanäle (row, col, rgb) --> (rgb, row, col)
+def img_to_tensor(x, **kwargs):
+    return x.transpose(2, 0, 1).astype('float32')
+
+def mask_to_tensor(x, **kwargs):
+    x = x[..., np.newaxis]
     return x.transpose(2, 0, 1).astype('float32')
