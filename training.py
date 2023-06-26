@@ -86,7 +86,7 @@ valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_worker
 ################################################################################
 # Loss-Funktion und Metrik festlegen
 loss = smp_utils.losses.CrossEntropyLoss()
-metrics = [smp_utils.metrics.IoU(eps=1., activation=None)]
+metrics = [smp_utils.metrics.IoU()]
 
 # Optimizer Festlegen
 optimizer = torch.optim.Adam([dict(params=model.parameters(), lr=0.0001)])

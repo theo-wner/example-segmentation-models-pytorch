@@ -41,19 +41,19 @@ def visualize_img_mask(image, gt_mask, pr_mask, filename='test'):
     plt.imshow(image)
 
     # Labels und dazugehörige Farben als dictionary definieren
-    labels_and_colors = {'sky' : 'lightblue', 
-            'building' : 'lightyellow',
-            'pole' : 'orange', 
-            'road' : 'gray',
-            'pavement' : 'lightgray',
-            'tree' : 'green',
-            'signsymbol' : 'black',
-            'fence' : 'brown',
-            'car' : 'blue',
-            'pedestrian' : 'red', 
-            'bicyclist' : 'purple',
-            'unlabelled' : 'white'}
-    # Eigene Colomap erstellen
+    labels_and_colors = {'Himmel' : 'lightblue', 
+            'Gebäude' : 'lightyellow',
+            'Pfosten' : 'orange', 
+            'Straße' : 'gray',
+            'Gehweg' : 'lightgray',
+            'Baum' : 'green',
+            'Straßenschild' : 'black',
+            'Zaun' : 'brown',
+            'Auto' : 'blue',
+            'Fußgänger' : 'red', 
+            'Radfahrer' : 'purple',
+            'Ungelabeled' : 'white'}
+    # Eigene Colormap erstellen
     cmap = mcolors.ListedColormap(list(labels_and_colors.values()))
 
     # Ground Truth Maske
@@ -125,7 +125,7 @@ def get_validation_augmentation():
 def get_preprocessing(preprocessing_fn):
     _transform = [
         albu.Lambda(image=preprocessing_fn),
-        albu.Lambda(image=img_to_tensor, mask=mask_to_tensor),
+        albu.Lambda(image=to_tensor, mask=to_tensor),
     ]
     return albu.Compose(_transform)
 
@@ -133,13 +133,5 @@ def get_preprocessing(preprocessing_fn):
 # Bild in eine Form bringen, die vom Netz verarbeitet werden kann
 # Transpose ändert die Reihenfolge der Kanäle (row, col, rgb) --> (rgb, row, col)
 ################################################################################
-def img_to_tensor(x, **kwargs):
-    return x.transpose(2, 0, 1).astype('float32')
-
-################################################################################
-# Maske in eine Form bringen, die vom Netz verarbeitet werden kann
-# Aus dem letzten Kanal (Klassen 0 - 11) muss noch eine Dimension gemacht werden
-################################################################################
-def mask_to_tensor(x, **kwargs):
-    #x = x[..., np.newaxis]
+def to_tensor(x, **kwargs):
     return x.transpose(2, 0, 1).astype('float32')
