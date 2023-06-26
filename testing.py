@@ -83,7 +83,5 @@ for i in range(5):
     x_tensor = torch.from_numpy(image).to(DEVICE).unsqueeze(0)
     pr_mask = best_model.predict(x_tensor)
     pr_mask = (pr_mask.squeeze().cpu().numpy().round())
-        
-    #visualize(filename='pred_' + str(i) + '.png', image=image_vis, ground_truth_mask=gt_mask, predicted_mask=pr_mask)
 
-    visualize_img_mask(image_vis, pr_mask, filename='test')
+    visualize_img_mask(image_vis, gt_mask, pr_mask, filename='test_' + str(i) + '.png')

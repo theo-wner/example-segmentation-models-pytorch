@@ -10,7 +10,6 @@ import cv2
 # Hilfsfunktion, die mehrere Bilder in einem Subplot darstellt
 # visualize(image_1=img1, image2=img2) kann dann über key und value iterieren
 def visualize(filename='test', **images):
-    """PLot images in one row."""
     n = len(images)
     plt.figure(figsize=(16, 5))
     for i, (name, image) in enumerate(images.items()):
@@ -28,20 +27,15 @@ def visualize(filename='test', **images):
     plt.savefig(os.path.join(directory, filename))
 
 # Hilfsfunktion, die ein Paar aus Bild und Maske darstellt
-def visualize_img_mask(image, mask, filename='test'):
+def visualize_img_mask(image, gt_mask, pr_mask, filename='test'):
     # Bild
     plt.figure(figsize=(16, 5))
-    plt.subplot(1, 2, 1)
+    plt.subplot(1, 3, 1)
     plt.xticks([])
     plt.yticks([])
     plt.title('Bild')
     plt.imshow(image)
 
-    # Maske
-    plt.subplot(1, 2, 2)
-    plt.xticks([])
-    plt.yticks([])
-    plt.title('Maske')
     # Labels und dazugehörige Farben als dictionary definieren
     labels_and_colors = {'sky' : 'lightblue', 
             'building' : 'lightyellow',
@@ -58,12 +52,33 @@ def visualize_img_mask(image, mask, filename='test'):
     # Eigene Colomap erstellen
     cmap = mcolors.ListedColormap(list(labels_and_colors.values()))
 
-    plt.imshow(mask, cmap=cmap)
+    # Ground Truth Maske
+    gt_mask = np.argmax(gt_mask, axis=0) # Stack in visualisierbares Bild konvertieren
+    plt.subplot(1, 3, 2)
+    plt.xticks([])
+    plt.yticks([])
+    plt.title('Ground Truth')
+    plt.imshow(gt_mask, cmap=cmap)
 
+    # Prediction Maske
+    pr_mask = np.argmax(pr_mask, axis=0) # Stack in visualisierbares Bild konvertieren
+    plt.subplot(1, 3, 3)
+    plt.xticks([])
+    plt.yticks([])
+    plt.title('Segmentierungsergebnis')
+    plt.imshow(pr_mask, cmap=cmap)
     # Legende erstellen
     legend_patches = [mpatches.Patch(color=color, label=label) for label, color in labels_and_colors.items()]
-    plt.legend(handles=legend_patches, title='Classes', loc='upper left', bbox_to_anchor=(1.02, 1))
-   
+    plt.legend(handles=legend_patches, title='Klassen', loc='upper left', bbox_to_anchor=(1.02, 1))
+
+    # Plots richtig platzieren
+    plt.subplots_adjust(left=0.01,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
+
     # Bild in Unterverzeichnis Abbildungen speichern
     directory = './Abbildungen/'
     if not os.path.exists(directory):
@@ -109,6 +124,8 @@ def get_preprocessing(preprocessing_fn):
 def img_to_tensor(x, **kwargs):
     return x.transpose(2, 0, 1).astype('float32')
 
+# Maske in eine Form bringen, die vom Netz verarbeitet werden kann
+# Aus dem letzten Kanal (Klassen 0 - 11) muss noch eine Dimension gemacht werden
 def mask_to_tensor(x, **kwargs):
-    x = x[..., np.newaxis]
+    #x = x[..., np.newaxis]
     return x.transpose(2, 0, 1).astype('float32')

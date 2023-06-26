@@ -78,7 +78,7 @@ valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_worker
 # Trainieren
 ################################################################################
 # Loss-Funktion und Metrik festlegen
-loss = smp.utils.losses.DiceLoss()
+loss = smp.utils.losses.DiceLoss('multilabel')
 metrics = [smp.utils.metrics.IoU(threshold=0.5)]
 
 # Optimizer Festlegen

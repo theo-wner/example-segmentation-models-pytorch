@@ -39,8 +39,8 @@ class Dataset(BaseDataset):
         #   1 - wenn der Pixel der Klasse angehört
         #   0 - wenn der Pixel nicht der Klasse angehört
         # Und reihe diese Bilder in einem Stack hintereinander
-        # masks = [(mask == v) for v in self.class_values]
-        # mask = np.stack(masks, axis=-1).astype('float')
+        masks = [(mask == v) for v in self.class_values]
+        mask = np.stack(masks, axis=-1).astype('float')
         
         # apply augmentations
         if self.augmentation:
@@ -51,7 +51,6 @@ class Dataset(BaseDataset):
         if self.preprocessing:
             sample = self.preprocessing(image=image, mask=mask)
             image, mask = sample['image'], sample['mask']
-            
         return image, mask
         
     def __len__(self):
