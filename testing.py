@@ -39,7 +39,7 @@ DEVICE = 'cuda:1'
 
 preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
 
-loss = smp.utils.losses.DiceLoss()
+loss = smp.utils.losses.DiceLoss('multilabel')
 metrics = [smp.utils.metrics.IoU(threshold=0.5)]
 
 ################################################################################

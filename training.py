@@ -8,6 +8,8 @@ from functions import *
 import torch
 import ssl
 from torch.utils.data import DataLoader
+# Utils muss nochmal separat importiert werden, weil es sonst nicht erkannt wird
+import segmentation_models_pytorch.utils as smp_utils
 
 ################################################################################
 # Daten laden
@@ -38,7 +40,7 @@ CLASSES = ['sky', 'building', 'pole', 'road', 'pavement',
                'tree', 'signsymbol', 'fence', 'car', 
                'pedestrian', 'bicyclist', 'unlabelled']
 ACTIVATION = 'sigmoid'
-DEVICE = 'cuda:1'
+DEVICE = 'cuda:0'
 
 # Diese Zeile musste hinzugefügt werden, weil sonst ein ssl-Fehler auftritt
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -78,17 +80,17 @@ valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_worker
 # Trainieren
 ################################################################################
 # Loss-Funktion und Metrik festlegen
-loss = smp.utils.losses.DiceLoss('multilabel')
-metrics = [smp.utils.metrics.IoU(threshold=0.5)]
+loss = smp_utils.losses.DiceLoss(smp.losses.MULTILABEL_MODE)
+metrics = [smp_utils.metrics.IoU(threshold=0.5)]
 
 # Optimizer Festlegen
 optimizer = torch.optim.Adam([dict(params=model.parameters(), lr=0.0001)])
 
 # TrainEpoch-Objekt erstellen, vereinfacht das Trainieren
-train_epoch = smp.utils.train.TrainEpoch(model, loss=loss, metrics=metrics, optimizer=optimizer,device=DEVICE,verbose=True)
+train_epoch = smp_utils.train.TrainEpoch(model, loss=loss, metrics=metrics, optimizer=optimizer,device=DEVICE,verbose=True)
 
 # ValidEpoch-Objekt erstellen, vereinfacht das Validieren
-valid_epoch = smp.utils.train.ValidEpoch(model, loss=loss, metrics=metrics, device=DEVICE, verbose=True)
+valid_epoch = smp_utils.train.ValidEpoch(model, loss=loss, metrics=metrics, device=DEVICE, verbose=True)
 
 # Für 40 Epochen trainieren
 max_score = 0
@@ -101,7 +103,7 @@ for i in range(0, 40):
     # Immer das Modell mit dem höchsten iou speichern
     if max_score < valid_logs['iou_score']:
         max_score = valid_logs['iou_score']
-        torch.save(model, './best_model.pth')
+        torch.save(model, './best_model_multiclass.pth')
         print('Model saved!')
 
     # Bei 25 Iterationen Learning Rate verkleinern    
