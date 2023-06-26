@@ -89,4 +89,4 @@ for i in range(5):
     pr_mask = best_model.predict(x_tensor)
     pr_mask = (pr_mask.squeeze().cpu().numpy().round())
         
-    visualize_img_mask(image=image_vis, gt_mask=gt_mask, pr_mask=pr_mask, filename='pred_' + str(i) + '.png')
+    visualize_img_mask(image=image_vis, gt_mask=gt_mask, pr_mask=pr_mask, filename='pred_binary_' + str(i) + '.png')
