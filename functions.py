@@ -7,8 +7,10 @@ import matplotlib.patches as mpatches
 import matplotlib.colors as mcolors
 import cv2
 
+################################################################################
 # Hilfsfunktion, die mehrere Bilder in einem Subplot darstellt
 # visualize(image_1=img1, image2=img2) kann dann über key und value iterieren
+################################################################################
 def visualize(filename='test', **images):
     n = len(images)
     plt.figure(figsize=(16, 5))
@@ -26,7 +28,9 @@ def visualize(filename='test', **images):
         os.makedirs(directory)
     plt.savefig(os.path.join(directory, filename))
 
+################################################################################
 # Hilfsfunktion, die ein Paar aus Bild und Maske darstellt
+################################################################################
 def visualize_img_mask(image, gt_mask, pr_mask, filename='test'):
     # Bild
     plt.figure(figsize=(16, 5))
@@ -85,8 +89,10 @@ def visualize_img_mask(image, gt_mask, pr_mask, filename='test'):
         os.makedirs(directory)
     plt.savefig(os.path.join(directory, filename))
 
+################################################################################
 # Funktion, die eine Pipeline für die training augmentation bereitstellt
 # (Mehrere zufällige Transformationen)
+################################################################################
 def get_training_augmentation():
     train_transform = [
         albu.HorizontalFlip(p=0.5),
@@ -102,16 +108,20 @@ def get_training_augmentation():
     ]
     return albu.Compose(train_transform)
 
+################################################################################
 # Funktion, die dasselbe für den Validierungdatensatz macht, aber hier sind die Trafos nicht 
 # so wichtig. Es sollen nur alle Validierungsbilder auf dieselbe, durch 32 teilbare Größe gebracht werden
+################################################################################
 def get_validation_augmentation():
     test_transform = [
         albu.PadIfNeeded(384, 480)
     ]
     return albu.Compose(test_transform)
 
+################################################################################
 # Für einige Encoder müssen die Bilder vorverarbeitet werden, hierfür wird eine zum Encoder passende
 # preprocesing function benötigt.
+################################################################################
 def get_preprocessing(preprocessing_fn):
     _transform = [
         albu.Lambda(image=preprocessing_fn),
@@ -119,13 +129,17 @@ def get_preprocessing(preprocessing_fn):
     ]
     return albu.Compose(_transform)
 
+################################################################################
 # Bild in eine Form bringen, die vom Netz verarbeitet werden kann
 # Transpose ändert die Reihenfolge der Kanäle (row, col, rgb) --> (rgb, row, col)
+################################################################################
 def img_to_tensor(x, **kwargs):
     return x.transpose(2, 0, 1).astype('float32')
 
+################################################################################
 # Maske in eine Form bringen, die vom Netz verarbeitet werden kann
 # Aus dem letzten Kanal (Klassen 0 - 11) muss noch eine Dimension gemacht werden
+################################################################################
 def mask_to_tensor(x, **kwargs):
     #x = x[..., np.newaxis]
     return x.transpose(2, 0, 1).astype('float32')
