@@ -77,7 +77,7 @@ valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_worker
 ################################################################################
 # Trainieren
 ################################################################################
-# Loss-Funktion und Metrik festlefen
+# Loss-Funktion und Metrik festlegen
 loss = smp.utils.losses.DiceLoss()
 metrics = [smp.utils.metrics.IoU(threshold=0.5)]
 
@@ -108,5 +108,3 @@ for i in range(0, 40):
     if i == 25:
         optimizer.param_groups[0]['lr'] = 1e-5
         print('Decrease decoder learning rate to 1e-5!')
-
-
