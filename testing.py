@@ -9,6 +9,11 @@ import numpy as np
 import segmentation_models_pytorch.utils as smp_utils
 
 ################################################################################
+# GPU Abfrage
+################################################################################
+gpu_id = input('GPU ID: ')
+
+################################################################################
 # Daten laden
 ################################################################################
 DATA_DIR = './data/CamVid/'
@@ -35,7 +40,7 @@ ENCODER = 'se_resnext50_32x4d'
 ENCODER_WEIGHTS = 'imagenet'
 CLASSES = ['car']
 ACTIVATION = 'sigmoid'
-DEVICE = 'cuda:0'
+DEVICE = 'cuda:' + gpu_id
 
 preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
 

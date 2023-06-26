@@ -12,6 +12,11 @@ from torch.utils.data import DataLoader
 import segmentation_models_pytorch.utils as smp_utils
 
 ################################################################################
+# GPU Abfrage
+################################################################################
+gpu_id = input('GPU ID: ')
+
+################################################################################
 # Daten laden
 ################################################################################
 DATA_DIR = './data/CamVid/'
@@ -38,7 +43,7 @@ ENCODER = 'se_resnext50_32x4d'
 ENCODER_WEIGHTS = 'imagenet'
 CLASSES = ['car']
 ACTIVATION = 'sigmoid'
-DEVICE = 'cuda:0'
+DEVICE = 'cuda:' + gpu_id
 
 # Diese Zeile musste hinzugefügt werden, weil sonst ein ssl-Fehler auftritt
 ssl._create_default_https_context = ssl._create_unverified_context
