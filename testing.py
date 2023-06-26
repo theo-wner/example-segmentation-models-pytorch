@@ -33,7 +33,7 @@ ENCODER = 'se_resnext50_32x4d'
 ENCODER_WEIGHTS = 'imagenet'
 CLASSES = ['car']
 ACTIVATION = 'sigmoid'
-DEVICE = 'cuda:1'
+DEVICE = 'cuda:0'
 
 preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
 
@@ -43,7 +43,7 @@ metrics = [smp.utils.metrics.IoU(threshold=0.5)]
 ################################################################################
 # Bestes trainiertes Modell laden
 ################################################################################
-best_model = torch.load('./best_model.pth')
+best_model = torch.load('./best_model_binary.pth')
 
 ################################################################################
 # Test-Datensatz
@@ -82,4 +82,4 @@ for i in range(5):
     pr_mask = best_model.predict(x_tensor)
     pr_mask = (pr_mask.squeeze().cpu().numpy().round())
         
-    visualize(filename='pred_' + str(i) + '.png', image=image_vis, ground_truth_mask=gt_mask, predicted_mask=pr_mask)
+    visualize_img_mask(image=image_vis, gt_mask=gt_mask, pr_mask=pr_mask, filename='pred_' + str(i) + '.png')

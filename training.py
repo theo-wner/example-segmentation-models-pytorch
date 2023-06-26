@@ -36,7 +36,7 @@ ENCODER = 'se_resnext50_32x4d'
 ENCODER_WEIGHTS = 'imagenet'
 CLASSES = ['car']
 ACTIVATION = 'sigmoid'
-DEVICE = 'cuda:1'
+DEVICE = 'cuda:0'
 
 # Diese Zeile musste hinzugefügt werden, weil sonst ein ssl-Fehler auftritt
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -99,7 +99,7 @@ for i in range(0, 40):
     # Immer das Modell mit dem höchsten iou speichern
     if max_score < valid_logs['iou_score']:
         max_score = valid_logs['iou_score']
-        torch.save(model, './best_model.pth')
+        torch.save(model, './best_model_binary.pth')
         print('Model saved!')
 
     # Bei 25 Iterationen Learning Rate verkleinern    
