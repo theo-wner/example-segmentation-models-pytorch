@@ -47,12 +47,12 @@ DEVICE = 'cuda:' + gpu_id
 preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
 
 loss = smp_utils.losses.CrossEntropyLoss()
-metrics = [smp_utils.metrics.IoU(threshold=0.5)]
+metrics = [smp_utils.metrics.IoU()]
 
 ################################################################################
 # Bestes trainiertes Modell laden
 ################################################################################
-best_model = torch.load('./best_model_multiclass.pth')
+best_model = torch.load('./best_model_multiclass_2023-06-27_80ep.pth')
 
 ################################################################################
 # Test-Datensatz

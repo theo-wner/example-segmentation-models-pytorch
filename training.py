@@ -97,9 +97,9 @@ train_epoch = smp_utils.train.TrainEpoch(model, loss=loss, metrics=metrics, opti
 # ValidEpoch-Objekt erstellen, vereinfacht das Validieren
 valid_epoch = smp_utils.train.ValidEpoch(model, loss=loss, metrics=metrics, device=DEVICE, verbose=True)
 
-# Für 40 Epochen trainieren
+# Für 80 Epochen trainieren
 max_score = 0
-for i in range(0, 5):
+for i in range(0, 80):
     print('\nEpoch: {}'.format(i))
     train_logs = train_epoch.run(train_loader)
     valid_logs = valid_epoch.run(valid_loader)
@@ -110,7 +110,7 @@ for i in range(0, 5):
         torch.save(model, './best_model_multiclass.pth')
         print('Model saved!')
 
-    # Bei 25 Iterationen Learning Rate verkleinern    
-    if i == 25:
+    # Bei 50 Iterationen Learning Rate verkleinern    
+    if i == 50:
         optimizer.param_groups[0]['lr'] = 1e-5
         print('Decrease decoder learning rate to 1e-5!')
